@@ -1,104 +1,96 @@
 package com.example.inntgservice.service.excel;
 
-import com.example.inntgservice.model.dictionary.excel.Header;
+import com.example.inntgservice.exception.UploadProcessingException;
+import com.example.inntgservice.model.jpa.InnInfo;
+import com.example.inntgservice.model.jpa.InnInfoRepository;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-
-import static com.example.inntgservice.utils.DateConverter.*;
+import java.util.LinkedList;
 
 @Component
+@Slf4j
 public class InnUploaderService extends ConvertServiceBase {
-    private int START_ROW;
+    private final int START_ROW = 1;
 
     private int LAST_ROW;
 
-    public List<List<String>> getConvertedBook(XSSFWorkbook book) {
-        val data = new ArrayList<List<String>>();
-        data.add(Header.headersOutput);
-        sheet = book.getSheetAt(0);
-        if(getCellValue(1, 0).equals("")){
-            START_ROW = 3;
-        } else{
-            START_ROW = 1;
-        }
+    @Autowired
+    private InnInfoRepository innInfoRepository;
+
+    public void uploadBookToDb(XSSFWorkbook book) {
         int row = START_ROW;
-        int counterCopy = 1;
-        ArrayList<String> dataLine = new ArrayList();
-        try {
+        sheet = book.getSheetAt(0);
+        InnInfo innInfo;
+        int column = -1;
 
-            LAST_ROW = getLastRow(START_ROW);
-            LAST_COLUMN_NUMBER = sheet.getRow(START_ROW).getLastCellNum();
-            for (; row <= LAST_ROW; ++row) {
-                val isStart = isStart(row);
-                if (isStart) {
-                    counterCopy = 1;
-                }
-                dataLine = new ArrayList<>();
-                dataLine.add(getCellValue(row, 1));
-                dataLine.add(getCurrentDate(TEMPLATE_DATE_DOT));
-                dataLine.add("ООО ''ЛЕНТА''");
-                dataLine.add(getCellValue(row, 8));
-                dataLine.add("");
-                dataLine.add("Рефрижератор");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("5000");
-                dataLine.add("1");
-                dataLine.add("2");
-                dataLine.add("6");
-                dataLine.add("2");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add(isStart ? "Погрузка" : "Разгрузка");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add(getCellValue(row, 5).replaceAll(" ", ""));
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-                dataLine.add("");
-
-                ++counterCopy;
-                data.add(dataLine);
+        LAST_ROW = getLastRow(START_ROW);
+        log.info("Строк в файле:" + LAST_ROW);
+        LAST_COLUMN_NUMBER = sheet.getRow(START_ROW).getLastCellNum();
+        val innInfoList = new LinkedList<InnInfo>();
+        for (; row <= LAST_ROW; ++row) {
+            if (row % 5000 == 0) {
+                innInfoRepository.saveAll(innInfoList);
+                innInfoList.clear();
+                log.info("Успешно сохранились еще 5 к записей. row = " + row);
             }
-        } catch (Exception e) {
-//            throw new ConvertProcessingException("не удалось обработать строку:" + row
-//                    + " , после значения:" + dataLine + ". Ошибка:" + e.getMessage());
+            try {
+                innInfo = new InnInfo();
+                innInfo.setNumber_col(getCellValueLong(row, ++column));
+                innInfo.setBrief(getCellValue(row, ++column));
+                innInfo.setRegistrationNumber(getCellValueLong(row, ++column));
+                innInfo.setAddress(getCellValue(row, ++column));
+                innInfo.setHeadFio(getCellValue(row, ++column));
+                innInfo.setHeadInn(getCellValueLong(row, ++column));
+                innInfo.setPhone(getCellValue(row, ++column));
+                innInfo.setMail(getCellValue(row, ++column));
+                innInfo.setWebsite(getCellValue(row, ++column));
+                innInfo.setRegisteredDate(getCellDate(row, ++column));
+                innInfo.setCompanyAge(getCellValueDouble(row, ++column));
+                innInfo.setCoOwnersPriority(getCellValue(row, ++column));
+                innInfo.setTypeOfActivity(getCellValue(row, ++column));
+                innInfo.setSummaryIndicator(getCellValue(row, ++column));
+                innInfo.setInnWinner(getCellValueLong(row, ++column));
+                innInfo.setCreditLimit(getCellValueDouble(row, ++column));
+                innInfo.setAmountPendingClaims(getCellValueDouble(row, ++column));
+                innInfo.setDeliveryItem(getCellValue(row, ++column));
+                innInfo.setAverageNumberOfEmployees2022(getCellValueLong(row, ++column));
+                innInfo.setComment(getCellValue(row, ++column));
+                innInfo.setImportantInfo(getCellValue(row, ++column));
+                innInfo.setMyLists(getCellValue(row, ++column));
+                innInfo.setSparkRegistry(getCellValue(row, ++column));
+                innInfo.setRevenue2022(getCellValueDouble(row, ++column));
+                innInfo.setNetProfit2022(getCellValueDouble(row, ++column));
+                innInfo.setCapitalAndReserves(getCellValueDouble(row, ++column));
+                innInfo.setFixedAssets2022(getCellValueDouble(row, ++column));
+                innInfo.setCreditAssetsShort2022(getCellValueDouble(row, ++column));
+                innInfo.setCreditAssetsLong2022(getCellValueDouble(row, ++column));
+                innInfo.setLiabilitiesShort2022(getCellValueDouble(row, ++column));
+                innInfo.setLiabilitiesOtherLong2022(getCellValueDouble(row, ++column));
+                innInfo.setReserv2022(getCellValueDouble(row, ++column));
+                innInfo.setAccountsReceivable2022(getCellValueDouble(row, ++column));
+                innInfo.setAccountsPayable2022(getCellValueDouble(row, ++column));
+                innInfo.setOwnWorkingCapital2022(getCellValueDouble(row, ++column));
+                innInfo.setSalary2022(getCellValueDouble(row, ++column));
+                innInfo.setInterestPayments2022(getCellValueDoubleFromString(row, ++column));
+                innInfo.setBalanceCurrency2022(getCellValueDouble(row, ++column));
+                //innInfoRepository.save(innInfo);
+                innInfoList.add(innInfo);
+            } catch (Exception e) {
+                log.error("не удалось обработать строку:" + row
+                        + " , столбец:" + column
+                        + " , значение:" + getCellValue(row, column)
+                        + " , инн:" + getCellValue(row, 14)
+                        + ". Ошибка:" + e.getMessage());
+            } finally {
+                column = -1;
+            }
         }
-        return data;
+        innInfoRepository.saveAll(innInfoList);
+        log.info("Успешно сохранились остатки. Всего сохранено записей:" + (row - 1));
     }
 
-    private String getValueOrDefault(int row, int slippage, int col) {
-        row = row + slippage;
-        if (row < START_ROW || row > LAST_ROW) {
-            return "";
-        }
-        if (col < 0 || col > LAST_COLUMN_NUMBER || sheet.getRow(row) == null) {
-            return "";
-        }
-        return getCellValue(sheet.getRow(row).getCell(col));
-    }
-
-    private boolean isStart(int row) {
-        if (row == START_ROW) {
-            return true;
-        }
-        val cur = getValueOrDefault(row, 0, 1);
-        val prev1 = getValueOrDefault(row, -1, 1);
-        return !(cur.equals(prev1) || row == (START_ROW + 1) || row == (START_ROW) || prev1.equals(""));
-    }
 }

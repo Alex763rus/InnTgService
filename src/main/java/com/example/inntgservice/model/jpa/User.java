@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -32,6 +33,8 @@ public class User {
     @Column(name = "registered_at")
     private Timestamp registeredAt;
 
+//    @OneToMany(mappedBy = "statisticId", fetch = FetchType.LAZY)
+//    private List<Statistic> statistics;
     @Override
     public String toString() {
         return "User{" +

@@ -42,6 +42,9 @@ public class FileUploadService {
     public File uploadFileFromServer(String path) throws ParseException {
         return new File(path);
     }
+    public XSSFWorkbook uploadXlsxFromServer(String path) throws Exception {
+        return (XSSFWorkbook) (WorkbookFactory.create(uploadFileFromServer(path)));
+    }
 
     public File uploadFileFromTg(String fullFilePath, String file_id) throws IOException, ParseException {
         val url = new URL(SPEC_FILE_SEARCH + file_id);

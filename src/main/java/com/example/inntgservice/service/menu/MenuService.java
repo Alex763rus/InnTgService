@@ -23,6 +23,8 @@ import static com.example.inntgservice.enums.State.FREE;
 @Service
 public class MenuService {
 
+    private boolean isBlocked;
+
     @Autowired
     private MenuDefault menuActivityDefault;
 
@@ -39,13 +41,21 @@ public class MenuService {
     private MenuUploadInnFile menuUploadInnFile;
 
     @Autowired
+    private MenuCreateStatistic menuCreateStatistic;
+
+    @Autowired
+    private MenuSearchByInn menuSearchByInn;
+
+    @Autowired
     private MenuStart menuStart;
 
     @PostConstruct
     public void init() {
         // Список всех возможных обработчиков меню:
-        security.setMainMenu(List.of(menuStart, menuUploadInnFile));
+        security.setMainMenu(List.of(menuStart, menuUploadInnFile, menuCreateStatistic, menuSearchByInn));
+        isBlocked = false;
     }
+
 
     public List<PartialBotApiMethod> messageProcess(Update update) {
         val user = userService.getUser(update);

@@ -29,42 +29,35 @@ public class ConvertServiceBase {
         if (sheet.getRow(row).getCell(col) == null) {
             return "";
         }
+
         return getCellValue(sheet.getRow(row).getCell(col));
+    }
+
+    protected double getCellValueDouble(int row, int col) {
+        if (sheet.getRow(row) == null) {
+            return 0;
+        }
+        if (sheet.getRow(row).getCell(col) == null) {
+            return 0;
+        }
+        return sheet.getRow(row).getCell(col).getNumericCellValue();
+    }
+
+    protected Long getCellValueLong(int row, int col) {
+        val value = getCellValue(row, col).replaceAll(" ", "");
+        return value.equals("") ? 0 : Long.parseLong(value);
+    }
+
+    protected Double getCellValueDoubleFromString(int row, int col) {
+        val value = getCellValue(row, col);
+        return value.equals("") ? 0 : Double.parseDouble(value);
     }
 
     protected String getCellValue(XSSFCell xssfCell) {
         DataFormatter formatter = new DataFormatter();
         return formatter.formatCellValue(xssfCell);
     }
-    protected String getCellWindowValue(XSSFSheet sheet, int row, int col) {
-        if (sheet.getRow(row) == null) {
-            return "";
-        }
-        if (sheet.getRow(row).getCell(col) == null) {
-            return "";
-        }
-        return getCellValue(sheet.getRow(row).getCell(col));
-    }
 
-    protected List<List<String>> getDataFromSheet(XSSFWorkbook book, String sheetName, final int colStart, final int countColumns) {
-        val data = new ArrayList<List<String>>();
-        val windowSheet = book.getSheet(sheetName);
-        val colEnd = colStart + countColumns;
-        for (int row = 0; ; row++) {
-            val cellValue = getCellWindowValue(windowSheet, row, 0);
-            val nextValue = getCellWindowValue(windowSheet, row + 1, 0);
-            if (cellValue.equals("") && nextValue.equals("")) {
-                --row;
-                break;
-            }
-            val line = new ArrayList<String>();
-            for (int column = colStart; column < colEnd; ++ column){
-                line.add(getCellWindowValue(windowSheet, row, column));
-            }
-            data.add(line);
-        }
-        return data;
-    }
     protected Date getCellDate(int row, int col) {
         if (sheet.getRow(row) == null) {
             return null;
@@ -76,18 +69,10 @@ public class ConvertServiceBase {
     }
 
     protected int getLastRow(int startRow) {
-        int i = startRow;
-        for (; ; i++) {
-            if (getCellValue(i, 0).equals("")) {
-                if (getCellValue(i + 1, 0).equals("")) {
-                    break;
-                }
+        for (int i = startRow; ; i++) {
+            if (getCellValue(i, 14).equals("")) {
+                return i - 1;
             }
         }
-        return i - 1;
-    }
-
-    protected String getCurrentDate(String format) throws ParseException {
-        return convertDateFormat(new Date(), format);
     }
 }

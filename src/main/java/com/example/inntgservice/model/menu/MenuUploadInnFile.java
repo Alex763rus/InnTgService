@@ -1,11 +1,12 @@
 package com.example.inntgservice.model.menu;
 
 import com.example.inntgservice.model.jpa.User;
-import com.example.inntgservice.model.wpapper.SendDocumentWrap;
 import com.example.inntgservice.model.wpapper.SendMessageWrap;
 import com.example.inntgservice.service.excel.InnUploaderService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -15,9 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.example.inntgservice.constant.Constant.Command.UPLOAD_INN_FILE;
-import static com.example.inntgservice.constant.Constant.SHEET_RESULT_NAME;
 import static com.example.inntgservice.enums.FileType.USER_IN;
-import static com.example.inntgservice.enums.State.FREE;
+import static com.example.inntgservice.enums.State.*;
 
 @Component
 @Slf4j
@@ -31,8 +31,8 @@ public class MenuUploadInnFile extends Menu {
         switch (stateService.getState(user)) {
             case FREE:
                 return freeLogic(user, update);
-//            case CONVERT_FILE_LENTA:
-//                return convertFileLogic(user, update, convertServiceImplLenta);
+            case WAIT_UPLOAD_FILE:
+                return convertFileLogic(user, update);
         }
         return errorMessageDefault(update);
     }
@@ -51,19 +51,19 @@ public class MenuUploadInnFile extends Menu {
         if (update.hasMessage()) {
             if (update.getMessage().hasDocument()) {
                 try {
-                    val field = update.getMessage().getDocument();
-                    val fileFullPath = fileUploadService.getFileName(USER_IN, field.getFileName());
-                    val book = fileUploadService.uploadXlsx(fileFullPath, field.getFileId());
-
-                    val convertedBook = innUploaderService.getConvertedBook(book);
-//                    val document = excelGenerateService.processXlsx(convertedBook, "result", SHEET_RESULT_NAME);
-//                    stateService.setState(user, FREE);
-//                    return Arrays.asList(SendDocumentWrap.init()
-//                            .setChatIdLong(update.getMessage().getChatId())
-//                            .setDocument(document)
-//                            .build().createMessage());
+//                    val field = update.getMessage().getDocument();
+//                    val fileFullPath = fileUploadService.getFileName(USER_IN, field.getFileName());
+//                    val book = fileUploadService.uploadXlsx(fileFullPath, field.getFileId());
+                    val book = fileUploadService.uploadXlsxFromServer("C:\\Users\\grigorevap\\Desktop\\inn\\svod_MAIN.xlsx");
+                    innUploaderService.uploadBookToDb(book);
+                    stateService.setState(user, FREE);
+                    return Arrays.asList(SendMessageWrap.init()
+                            .setChatIdLong(update.getMessage().getChatId())
+                            .setText("Успешная загрузка")
+                            .build().createSendMessage());
                 } catch (Exception ex) {
                     log.error(ex.getMessage());
+                    return errorMessage(update, ex.getMessage());
                 }
             } else {
                 return errorMessage(update, "Ошибка. Сообщение не содержит документ.\nОтправьте документ");
@@ -76,10 +76,24 @@ public class MenuUploadInnFile extends Menu {
         if (!update.getMessage().getText().equals(getMenuComand())) {
             return errorMessageDefault(update);
         }
-//        stateService.setState(user, state);
+        XSSFWorkbook book = null;
+        try {
+            book = fileUploadService.uploadXlsxFromServer("C:\\Users\\grigorevap\\Desktop\\inn\\svod_lite.xlsx");
+            innUploaderService.uploadBookToDb(book);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return Arrays.asList(SendMessageWrap.init()
+                .setChatIdLong(update.getMessage().getChatId())
+                .setText("ОК!")
+                .build().createSendMessage());
+       /* stateService.setState(user, WAIT_UPLOAD_FILE);
         return Arrays.asList(SendMessageWrap.init()
                 .setChatIdLong(update.getMessage().getChatId())
                 .setText("Отправьте исходный файл")
                 .build().createSendMessage());
+
+        */
+
     }
 }

@@ -21,6 +21,10 @@ public class DateConverter {
         return new SimpleDateFormat(templateIn).parse(dateIn);
     }
 
+    public static String getCurrentDate(String format) throws ParseException {
+        return convertDateFormat(new Date(), format);
+    }
+
     public static String convertDateFormat(String dateIn, String templateIn, String templateOut) throws ParseException {
         val date = convertDateFormat(dateIn, templateIn);
         return new SimpleDateFormat(templateOut).format(date);
