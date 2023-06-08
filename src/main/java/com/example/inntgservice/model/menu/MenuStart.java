@@ -28,11 +28,16 @@ public class MenuStart extends MenuSearchByInnBase {
 
     @Override
     public List<PartialBotApiMethod> menuRun(User user, Update update) {
-        switch (stateService.getState(user)) {
-            case FREE:
-                return freeLogic(user, update);
-            case WAIT_INN:
-                return waitInnLogic(user, update);
+        try {
+            switch (stateService.getState(user)) {
+                case FREE:
+                    return freeLogic(user, update);
+                case WAIT_INN:
+                    return waitInnLogic(user, update);
+            }
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            return errorMessage(update, ex.getMessage());
         }
         return errorMessageDefault(update);
     }

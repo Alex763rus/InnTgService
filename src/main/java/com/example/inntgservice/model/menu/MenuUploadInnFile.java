@@ -51,10 +51,9 @@ public class MenuUploadInnFile extends Menu {
         if (update.hasMessage()) {
             if (update.getMessage().hasDocument()) {
                 try {
-//                    val field = update.getMessage().getDocument();
-//                    val fileFullPath = fileUploadService.getFileName(USER_IN, field.getFileName());
-//                    val book = fileUploadService.uploadXlsx(fileFullPath, field.getFileId());
-                    val book = fileUploadService.uploadXlsxFromServer("C:\\Users\\grigorevap\\Desktop\\inn\\svod_MAIN.xlsx");
+                    val field = update.getMessage().getDocument();
+                    val fileFullPath = fileUploadService.getFileName(USER_IN, field.getFileName());
+                    val book = fileUploadService.uploadXlsx(fileFullPath, field.getFileId());
                     innUploaderService.uploadBookToDb(book);
                     stateService.setState(user, FREE);
                     return Arrays.asList(SendMessageWrap.init()
@@ -72,7 +71,15 @@ public class MenuUploadInnFile extends Menu {
         return errorMessageDefault(update);
     }
 
-    protected List<PartialBotApiMethod> freeLogic(User user, Update update) {
+    private List<PartialBotApiMethod> freeLogic(User user, Update update) {
+        stateService.setState(user, WAIT_UPLOAD_FILE);
+        return Arrays.asList(SendMessageWrap.init()
+                .setChatIdLong(update.getMessage().getChatId())
+                .setText("Отправьте исходный файл")
+                .build().createSendMessage());
+    }
+
+    private List<PartialBotApiMethod> uploadFileWithoutTg(User user, Update update) {
         if (!update.getMessage().getText().equals(getMenuComand())) {
             return errorMessageDefault(update);
         }
@@ -85,15 +92,8 @@ public class MenuUploadInnFile extends Menu {
         }
         return Arrays.asList(SendMessageWrap.init()
                 .setChatIdLong(update.getMessage().getChatId())
-                .setText("ОК!")
+                .setText("Успешно загружено!")
                 .build().createSendMessage());
-       /* stateService.setState(user, WAIT_UPLOAD_FILE);
-        return Arrays.asList(SendMessageWrap.init()
-                .setChatIdLong(update.getMessage().getChatId())
-                .setText("Отправьте исходный файл")
-                .build().createSendMessage());
-
-        */
-
     }
+
 }

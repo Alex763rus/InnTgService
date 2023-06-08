@@ -7,7 +7,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public final class Constant {
     @NoArgsConstructor(access = PRIVATE)
-    public final class  App{
+    public final class App {
 
     }
 
@@ -21,6 +21,12 @@ public final class Constant {
 
     }
 
+    @NoArgsConstructor(access = PRIVATE)
+    public final class Security {
+        public static final String ADMIN_BLOCK_APP = "block";
+        public static final String ADMIN_UNBLOCK_APP = "unblock";
+    }
+
     public static String APP_NAME = "InnTgService";
     public static String PARSE_MODE = "Markdown";
 
@@ -30,8 +36,8 @@ public final class Constant {
 
     public static String NEW_LINE = "\n";
     public static String SPACE = " ";
+    public static String EMPTY = "";
     public static String SHEET_RESULT_NAME = "ИМПОРТ";
-
 
 
 }

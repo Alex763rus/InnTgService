@@ -45,11 +45,12 @@ public class MenuCreateStatistic extends Menu {
         if (allStatistic.size() == 0) {
             return errorMessage(update, "Статистика отсутствует");
         }
-        excelData.add(List.of("ID:", "Дата:", "Пользователь:", "ИНН:"));
+        excelData.add(List.of("ID:", "Дата:", "Пользователь:", "Логин:", "ИНН:"));
         for (val statistic : allStatistic) {
             excelData.add(List.of(
                     String.valueOf(statistic.getStatisticId())
                     , String.valueOf(statistic.getRegisteredAt())
+                    , prepareShield(statistic.getUser().getFirstName())
                     , prepareShield(statistic.getUser().getUserName())
                     , String.valueOf(statistic.getInn())
             ));

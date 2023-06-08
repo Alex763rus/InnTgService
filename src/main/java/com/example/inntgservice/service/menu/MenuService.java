@@ -61,8 +61,12 @@ public class MenuService {
         val user = userService.getUser(update);
         MenuActivity menuActivity = null;
         if (update.hasMessage()) {
+            val message = update.getMessage();
+            if (message != null && security.isBlockedApp(user, message.getText())) {
+                return new ArrayList<>();
+            }
             for (val menu : security.getMainMenu()) {
-                if (menu.getMenuComand().equals(update.getMessage().getText())) {
+                if (message != null && menu.getMenuComand().equals(message.getText())) {
                     if (security.checkAccess(user, menu.getMenuComand())) {
                         menuActivity = menu;
                     } else {

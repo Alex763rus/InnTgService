@@ -24,6 +24,7 @@ import static com.example.inntgservice.enums.UserRole.*;
 @Data
 @PropertySource("application.properties")
 public class BotConfig {
+    private String adminChatId = "799008767";
 
     @Value("${bot.version}")
     String botVersion;
@@ -33,9 +34,6 @@ public class BotConfig {
 
     @Value("${bot.token}")
     String botToken;
-
-    @Value("${admin.chatid}")
-    String adminChatId;
 
 
     @Autowired
@@ -50,6 +48,8 @@ public class BotConfig {
     @Bean
     public Security security() {
         val roleSecurity = new Security();
+        roleSecurity.setBlocked(false);
+        roleSecurity.setAdminChatId(Long.parseLong(getAdminChatId()));
 
         // Настройка команд по ролям:
         val roleAccess = new HashMap<UserRole, List<String>>();
