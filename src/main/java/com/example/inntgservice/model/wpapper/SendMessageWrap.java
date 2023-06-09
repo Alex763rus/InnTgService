@@ -23,7 +23,7 @@ public class SendMessageWrap {
         sendMessage.setChatId(chatId);
         sendMessage.setText(text);
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        //sendMessage.setParseMode(PARSE_MODE);
+        sendMessage.setParseMode(PARSE_MODE);
         return sendMessage;
     }
 }

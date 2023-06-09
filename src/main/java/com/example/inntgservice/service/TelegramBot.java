@@ -21,6 +21,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.inntgservice.constant.Constant.NEW_LINE;
+
 @Component
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
@@ -85,8 +87,16 @@ public class TelegramBot extends TelegramLongPollingBot {
         val text = answer.getText();
         val tokens = new ArrayList<String>();
 
-        for (int start = 0; start < text.length(); start += MESSAGE_LEN_LIMIT) {
-            tokens.add(text.substring(start, Math.min(text.length(), start + MESSAGE_LEN_LIMIT)));
+        int start = 0;
+        int step = MESSAGE_LEN_LIMIT;
+        int finish = step;
+        for (; start < text.length(); ) {
+            finish = text.lastIndexOf(NEW_LINE, start + MESSAGE_LEN_LIMIT);
+            if(start == finish){
+                finish = start + MESSAGE_LEN_LIMIT;
+            }
+            tokens.add(text.substring(start, Math.min(text.length(), finish)));
+            start = finish;
         }
         for (val token : tokens) {
             splitAnswerOnToLongTextList.add(SendMessageWrap.init()

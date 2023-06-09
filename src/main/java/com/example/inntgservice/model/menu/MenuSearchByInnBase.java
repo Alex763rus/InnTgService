@@ -93,17 +93,17 @@ public abstract class MenuSearchByInnBase extends Menu {
     private String getPrepareParameter(String brief, String value) {
         val prepareParametr = new StringBuilder();
         prepareParametr
-//                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(prepareShield(value));
-                .append(NEW_LINE).append("--->").append(brief).append(value);
+                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(prepareShield(value));
+//                .append(NEW_LINE).append("--->").append(brief).append(value);
         return prepareParametr.toString();
     }
 
     private String getPrepareParameterWithoutShield(String brief, String value) {
         val prepareParametr = new StringBuilder();
-//        prepareParametr
-//                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(value);
         prepareParametr
-                .append(NEW_LINE).append("--->").append(brief).append(value);
+                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(value);
+//        prepareParametr
+//                .append(NEW_LINE).append("--->").append(brief).append(value);
         return prepareParametr.toString();
     }
 
@@ -111,8 +111,8 @@ public abstract class MenuSearchByInnBase extends Menu {
     private String getPrepareParameter(String brief, Long value) {
         val prepareParametr = new StringBuilder();
         prepareParametr
-//                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(value);
-                .append(NEW_LINE).append("--->").append(brief).append(value);
+                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(prepareShield(String.valueOf(value)));
+//                .append(NEW_LINE).append("--->").append(brief).append(value);
         return prepareParametr.toString();
     }
 
@@ -155,7 +155,7 @@ public abstract class MenuSearchByInnBase extends Menu {
                 .append(getPrepareParameter("2022, Кредиторская задолженность, RUB: ", convertDoubleFormat(innInfo.getAccountsPayable2022())))
                 .append(getPrepareParameter("2022, Собственный оборотный капитал, RUB: ", convertDoubleFormat(innInfo.getOwnWorkingCapital2022())))
                 .append(getPrepareParameter("2022, Оплата труда, RUB: ", convertDoubleFormat(innInfo.getSalary2022())))
-                .append(getPrepareParameter("2022, Платежи по процентам, RUB: ", convertDoubleFormat(innInfo.getInterestPayments2022())))
+                .append(getPrepareParameter("2022 Платежи по процентам, RUB: ", convertDoubleFormat(innInfo.getInterestPayments2022())))
                 .append(getPrepareParameter("2022, Валюта баланса, RUB: ", convertDoubleFormat(innInfo.getBalanceCurrency2022())))
         ;
         return innInfoString.toString();

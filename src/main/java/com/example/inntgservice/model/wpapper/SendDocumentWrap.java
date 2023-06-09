@@ -23,7 +23,7 @@ public class SendDocumentWrap {
         val chatId = chatIdString == null ? String.valueOf(chatIdLong) : chatIdString;
         sendDocument.setChatId(chatId);
         sendDocument.setReplyMarkup(inlineKeyboardMarkup);
-//        sendDocument.setParseMode(PARSE_MODE);
+        sendDocument.setParseMode(PARSE_MODE);
         sendDocument.setDocument(document);
         return sendDocument;
     }
