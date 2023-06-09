@@ -46,7 +46,7 @@ public class DistributionService {
     private void sendMessage(String chatId, String message) {
         try {
             SendMessage sendMessage = new SendMessage(chatId, message);
-            sendMessage.setParseMode(PARSE_MODE);
+//            sendMessage.setParseMode(PARSE_MODE);
             telegramBot.execute(sendMessage);
         } catch (TelegramApiException e) {
             log.error(e.getMessage());

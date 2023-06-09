@@ -48,7 +48,10 @@ public class MenuStart extends MenuSearchByInnBase {
             case BLOCKED:
                 messageText.append("Доступ запрещен");
             case SIMPLE_USER:
-                return inputInnLogic(user, update);
+                messageText.append("Главное меню:").append(NEW_LINE)
+                        .append("- поиск по ИНН: ").append(prepareShield(SEARCH_BY_INN)).append(NEW_LINE)
+                        ;
+                break;
             case ADMIN:
                 messageText.append("Главное меню:").append(NEW_LINE)
                         .append("- поиск по ИНН: ").append(prepareShield(SEARCH_BY_INN)).append(NEW_LINE)

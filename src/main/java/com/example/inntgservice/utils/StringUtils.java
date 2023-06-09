@@ -12,8 +12,7 @@ import static com.example.inntgservice.constant.Constant.EMPTY;
 @Getter
 @SuperBuilder(setterPrefix = "set", builderMethodName = "init", toBuilder = true)
 public class StringUtils {
-
-    private static final String[] shieldingSimbols = {"_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", " -", "=", "|", "{", "}", /*".",*/ "!"};
+    private static final String[] shieldingSimbols = {"_", "*", "[", "]", "(", ")", "~", "`", ">", "#", "+", " -", "=", "|", "{", "}", ".", "!"};
 
     public static final DecimalFormat decimalFormat1 = new DecimalFormat("#.##");
 
@@ -21,9 +20,10 @@ public class StringUtils {
         if(source == null || source.equals(EMPTY)){
             return EMPTY;
         }
+        /*
         for (String shieldingSimbol : shieldingSimbols) {
             source = source.replace(shieldingSimbol, SHIELD + shieldingSimbol);
-        }
+        }*/
         return source;
     }
 
@@ -36,13 +36,13 @@ public class StringUtils {
         Double absValue = value.compareTo(ZERO) == 1 ? value : -value;
         val result = new StringBuilder();
         if (absValue.compareTo(ONE_MILLIARD) == 1) {
-            return result.append(decimalFormat1.format(value / ONE_MILLIARD)).append(" млрд руб.").toString();
+            return result.append(decimalFormat1.format(value / ONE_MILLIARD)).append(" млрд руб ").toString();
         }
         if (absValue.compareTo(ONE_MILLION) == 1) {
-            return result.append(decimalFormat1.format(value / ONE_MILLION)).append(" млн руб.").toString();
+            return result.append(decimalFormat1.format(value / ONE_MILLION)).append(" млн руб ").toString();
         }
         if (absValue.compareTo(ONE_THOUSAND) == 1) {
-            return result.append(decimalFormat1.format(value / ONE_THOUSAND)).append(" тыс руб.").toString();
+            return result.append(decimalFormat1.format(value / ONE_THOUSAND)).append(" тыс руб ").toString();
         }
         return decimalFormat1.format(value);
     }

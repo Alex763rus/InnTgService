@@ -1,9 +1,10 @@
-package com.example.inntgservice.model.dictionary.security;
+package com.example.inntgservice.model.security;
 
 import com.example.inntgservice.enums.UserRole;
 import com.example.inntgservice.model.jpa.User;
 import com.example.inntgservice.model.menu.MenuActivity;
 import lombok.*;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.List;
 import java.util.Map;
@@ -26,13 +27,17 @@ public class Security {
 
     private List<MenuActivity> mainMenu;
 
-    public boolean isBlockedApp(User user, String message) {
-        if (!user.getChatId().equals(adminChatId) || message == null) {
+    public boolean isBlockedApp(User user, Message message) {
+        if (message == null || !user.getChatId().equals(adminChatId)) {
             return isBlocked;
         }
-        if (message.equals(ADMIN_BLOCK_APP)) {
+        val messageText = message.getText();
+        if (messageText == null) {
+            return isBlocked;
+        }
+        if (messageText.equals(ADMIN_BLOCK_APP)) {
             isBlocked = true;
-        } else if (message.equals(ADMIN_UNBLOCK_APP)) {
+        } else if (messageText.equals(ADMIN_UNBLOCK_APP)) {
             isBlocked = false;
         }
         return false;

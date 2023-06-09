@@ -56,7 +56,7 @@ public class MenuCreateStatistic extends Menu {
             ));
         }
         val excelDocument = excelService.createExcelDocument("Статистика", excelData);
-        stateService.setState(user, FREE);
+        stateService.refreshUser(user);
         return List.of(SendDocumentWrap.init()
                 .setChatIdLong(user.getChatId())
                 .setDocument(excelDocument)

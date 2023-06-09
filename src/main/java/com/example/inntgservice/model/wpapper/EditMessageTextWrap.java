@@ -22,7 +22,7 @@ public class EditMessageTextWrap {
         val chatId = chatIdString == null ? String.valueOf(chatIdLong) : chatIdString;
         editMessageText.setChatId(chatId);
         editMessageText.setText(text);
-        editMessageText.setParseMode(PARSE_MODE);
+//        editMessageText.setParseMode(PARSE_MODE);
         return editMessageText;
     }
 }

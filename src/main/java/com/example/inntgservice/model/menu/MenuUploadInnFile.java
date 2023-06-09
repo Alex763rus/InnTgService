@@ -55,7 +55,7 @@ public class MenuUploadInnFile extends Menu {
                     val fileFullPath = fileUploadService.getFileName(USER_IN, field.getFileName());
                     val book = fileUploadService.uploadXlsx(fileFullPath, field.getFileId());
                     innUploaderService.uploadBookToDb(book);
-                    stateService.setState(user, FREE);
+                    stateService.refreshUser(user);
                     return Arrays.asList(SendMessageWrap.init()
                             .setChatIdLong(update.getMessage().getChatId())
                             .setText("Успешная загрузка")

@@ -1,13 +1,11 @@
 package com.example.inntgservice.config;
 
 import com.example.inntgservice.enums.UserRole;
-import com.example.inntgservice.model.dictionary.security.Security;
-import com.example.inntgservice.service.excel.FileUploadService;
+import com.example.inntgservice.model.security.Security;
 import com.example.inntgservice.service.excel.InnUploaderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.val;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +22,7 @@ import static com.example.inntgservice.enums.UserRole.*;
 @Data
 @PropertySource("application.properties")
 public class BotConfig {
-    private String adminChatId = "799008767";
+    private final String adminChatId = "799008767";
 
     @Value("${bot.version}")
     String botVersion;

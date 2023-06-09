@@ -1,6 +1,6 @@
 package com.example.inntgservice.service.menu;
 
-import com.example.inntgservice.model.dictionary.security.Security;
+import com.example.inntgservice.model.security.Security;
 import com.example.inntgservice.model.menu.*;
 import com.example.inntgservice.model.wpapper.EditMessageTextWrap;
 import com.example.inntgservice.service.database.UserService;
@@ -62,15 +62,17 @@ public class MenuService {
         MenuActivity menuActivity = null;
         if (update.hasMessage()) {
             val message = update.getMessage();
-            if (message != null && security.isBlockedApp(user, message.getText())) {
+            if (security.isBlockedApp(user, message)) {
                 return new ArrayList<>();
             }
-            for (val menu : security.getMainMenu()) {
-                if (message != null && menu.getMenuComand().equals(message.getText())) {
-                    if (security.checkAccess(user, menu.getMenuComand())) {
-                        menuActivity = menu;
-                    } else {
-                        menuActivity = menuActivityDefault;
+            if (message != null && message.getText() != null) {
+                for (val menu : security.getMainMenu()) {
+                    if (menu.getMenuComand().equals(message.getText())) {
+                        if (security.checkAccess(user, menu.getMenuComand())) {
+                            menuActivity = menu;
+                        } else {
+                            menuActivity = menuActivityDefault;
+                        }
                     }
                 }
             }
@@ -111,13 +113,4 @@ public class MenuService {
         return listofCommands;
     }
 
-    private String getChatId(Update update) {
-        if (update.hasMessage()) {
-            return String.valueOf(update.getMessage().getChatId());
-        }
-        if (update.hasCallbackQuery()) {
-            return String.valueOf(update.getCallbackQuery().getMessage().getChatId());
-        }
-        return null;
-    }
 }
