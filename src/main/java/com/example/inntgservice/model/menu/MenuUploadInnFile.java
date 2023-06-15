@@ -3,7 +3,6 @@ package com.example.inntgservice.model.menu;
 import com.example.inntgservice.model.jpa.User;
 import com.example.inntgservice.model.wpapper.SendMessageWrap;
 import com.example.inntgservice.service.excel.InnUploaderService;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -57,7 +56,7 @@ public class MenuUploadInnFile extends Menu {
                     innUploaderService.uploadBookToDb(book);
                     stateService.refreshUser(user);
                     return Arrays.asList(SendMessageWrap.init()
-                            .setChatIdLong(update.getMessage().getChatId())
+                            .setChatIdLong(user.getChatId())
                             .setText("Успешная загрузка")
                             .build().createSendMessage());
                 } catch (Exception ex) {
@@ -74,7 +73,7 @@ public class MenuUploadInnFile extends Menu {
     private List<PartialBotApiMethod> freeLogic(User user, Update update) {
         stateService.setState(user, WAIT_UPLOAD_FILE);
         return Arrays.asList(SendMessageWrap.init()
-                .setChatIdLong(update.getMessage().getChatId())
+                .setChatIdLong(user.getChatId())
                 .setText("Отправьте исходный файл")
                 .build().createSendMessage());
     }
@@ -91,7 +90,7 @@ public class MenuUploadInnFile extends Menu {
             throw new RuntimeException(e);
         }
         return Arrays.asList(SendMessageWrap.init()
-                .setChatIdLong(update.getMessage().getChatId())
+                .setChatIdLong(user.getChatId())
                 .setText("Успешно загружено!")
                 .build().createSendMessage());
     }

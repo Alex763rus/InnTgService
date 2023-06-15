@@ -71,5 +71,12 @@ public abstract class Menu implements MenuActivity {
                 .build().createSendMessage();
     }
 
-
+    protected boolean checkLong(String value) {
+        try {
+            Long.parseLong(value);
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -20,11 +20,20 @@ public class Statistic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statisticId;
 
-//    @Column(name = "chat_id")
-//    private Long chatId;
-
     @Column(name = "inn")
     private Long inn;
+
+    @Column(name = "inn_head")
+    private Long innHead;
+
+    @Column(name = "mail")
+    private String mail;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "website")
+    private String website;
     @Column(name = "registered_at")
     private Timestamp registeredAt;
 

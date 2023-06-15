@@ -1,5 +1,6 @@
 package com.example.inntgservice.service.menu;
 
+import com.example.inntgservice.model.menu.search.*;
 import com.example.inntgservice.model.security.Security;
 import com.example.inntgservice.model.menu.*;
 import com.example.inntgservice.model.wpapper.EditMessageTextWrap;
@@ -44,7 +45,19 @@ public class MenuService {
     private MenuCreateStatistic menuCreateStatistic;
 
     @Autowired
-    private MenuSearchByInn menuSearchByInn;
+    private MenuSearchInnWinner menuSearchInnWinnerByInn;
+
+    @Autowired
+    private MenuSearchInnHead menuSearchByInnHead;
+
+    @Autowired
+    private MenuSearchByMail menuSearchByMail;
+
+    @Autowired
+    private MenuSearchByPhone menuSearchByPhone;
+
+    @Autowired
+    private MenuSearchByWebsite menuSearchByWebsite;
 
     @Autowired
     private MenuStart menuStart;
@@ -52,7 +65,8 @@ public class MenuService {
     @PostConstruct
     public void init() {
         // Список всех возможных обработчиков меню:
-        security.setMainMenu(List.of(menuStart, menuUploadInnFile, menuCreateStatistic, menuSearchByInn));
+        security.setMainMenu(List.of(menuStart, menuUploadInnFile, menuCreateStatistic, menuSearchInnWinnerByInn, menuSearchByInnHead
+                , menuSearchByMail, menuSearchByPhone, menuSearchByWebsite));
         isBlocked = false;
     }
 

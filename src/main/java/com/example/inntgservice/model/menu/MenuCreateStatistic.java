@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.inntgservice.constant.Constant.Command.CREATE_STATISTIC;
-import static com.example.inntgservice.enums.State.FREE;
-import static com.example.inntgservice.utils.DateConverter.convertDateFormat;
+import static com.example.inntgservice.utils.StringUtils.prepareLong;
 import static com.example.inntgservice.utils.StringUtils.prepareShield;
 
 @Component
@@ -45,14 +44,18 @@ public class MenuCreateStatistic extends Menu {
         if (allStatistic.size() == 0) {
             return errorMessage(update, "Статистика отсутствует");
         }
-        excelData.add(List.of("ID:", "Дата:", "Пользователь:", "Логин:", "ИНН:"));
+        excelData.add(List.of("ID:", "Дата:", "Пользователь:", "Логин:", "ИНН:", "ИНН Руководителя", "Почта", "Телефон", "Сайт"));
         for (val statistic : allStatistic) {
             excelData.add(List.of(
                     String.valueOf(statistic.getStatisticId())
                     , String.valueOf(statistic.getRegisteredAt())
                     , prepareShield(statistic.getUser().getFirstName())
                     , prepareShield(statistic.getUser().getUserName())
-                    , String.valueOf(statistic.getInn())
+                    , prepareLong(statistic.getInn())
+                    , prepareLong(statistic.getInnHead())
+                    , prepareShield(statistic.getMail())
+                    , prepareShield(statistic.getPhone())
+                    , prepareShield(statistic.getWebsite())
             ));
         }
         val excelDocument = excelService.createExcelDocument("Статистика", excelData);

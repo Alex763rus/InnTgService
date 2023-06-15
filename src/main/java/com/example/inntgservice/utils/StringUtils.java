@@ -16,6 +16,10 @@ public class StringUtils {
 
     public static final DecimalFormat decimalFormat1 = new DecimalFormat("#.##");
 
+    public static String prepareLong(Long source) {
+        return source == null ? EMPTY : String.valueOf(source);
+    }
+
     public static String prepareShield(String source) {
         if (source == null || source.equals(EMPTY)) {
             return EMPTY;

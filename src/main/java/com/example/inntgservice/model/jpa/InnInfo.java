@@ -38,6 +38,9 @@ public class InnInfo {
     @Column(name = "phone", length = 1024)
     private String phone;
 
+    @Column(name = "phone_prepare", length = 1024)
+    private String phonePrepare;
+
     @Column(name = "mail", length = 1024)
     private String mail;
     @Column(name = "website", length = 1024)

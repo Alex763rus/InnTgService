@@ -52,8 +52,8 @@ public class BotConfig {
         // Настройка команд по ролям:
         val roleAccess = new HashMap<UserRole, List<String>>();
         roleAccess.put(BLOCKED, List.of(COMMAND_DEFAULT, COMMAND_START));
-        roleAccess.put(SIMPLE_USER, List.of(COMMAND_DEFAULT, COMMAND_START, SEARCH_BY_INN));
-        roleAccess.put(ADMIN, List.of(COMMAND_DEFAULT, COMMAND_START, SEARCH_BY_INN
+        roleAccess.put(SIMPLE_USER, List.of(COMMAND_DEFAULT, COMMAND_START, SEARCH_BY_INN, SEARCH_BY_INN_HEAD, SEARCH_BY_MAIL, SEARCH_BY_PHONE, SEARCH_BY_WEBSITE));
+        roleAccess.put(ADMIN, List.of(COMMAND_DEFAULT, COMMAND_START, SEARCH_BY_INN, SEARCH_BY_INN_HEAD, SEARCH_BY_MAIL, SEARCH_BY_PHONE, SEARCH_BY_WEBSITE
                 , UPLOAD_INN_FILE, CREATE_STATISTIC));
         roleSecurity.setRoleAccess(roleAccess);
         return roleSecurity;

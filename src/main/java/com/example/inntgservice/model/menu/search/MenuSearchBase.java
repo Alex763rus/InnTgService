@@ -1,122 +1,55 @@
-package com.example.inntgservice.model.menu;
+package com.example.inntgservice.model.menu.search;
 
-import com.example.inntgservice.enums.UserRole;
 import com.example.inntgservice.model.jpa.InnInfo;
 import com.example.inntgservice.model.jpa.Statistic;
 import com.example.inntgservice.model.jpa.User;
+import com.example.inntgservice.model.menu.Menu;
 import com.example.inntgservice.model.wpapper.SendMessageWrap;
 import jakarta.persistence.MappedSuperclass;
 import lombok.val;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.example.inntgservice.constant.Constant.NEW_LINE;
 import static com.example.inntgservice.constant.Constant.STAR;
-import static com.example.inntgservice.enums.State.FREE;
-import static com.example.inntgservice.enums.State.WAIT_INN;
 import static com.example.inntgservice.utils.DateConverter.TEMPLATE_DATE_DOT;
 import static com.example.inntgservice.utils.DateConverter.convertDateFormat;
 import static com.example.inntgservice.utils.StringUtils.convertDoubleFormat;
 import static com.example.inntgservice.utils.StringUtils.prepareShield;
 
 @MappedSuperclass
-public abstract class MenuSearchByInnBase extends Menu {
+public abstract class MenuSearchBase extends Menu {
 
-    protected List<PartialBotApiMethod> inputInnLogic(User user, Update update) {
-        stateService.setState(user, WAIT_INN);
+    protected List<PartialBotApiMethod> createSendMessage(User user, String message) {
         return List.of(SendMessageWrap.init()
-                .setChatIdLong(update.getMessage().getChatId())
-                .setText("Введите ИНН:")
+                .setChatIdLong(user.getChatId())
+                .setText(message)
                 .build().createSendMessage());
     }
 
-    protected List<PartialBotApiMethod> waitInnLogic(User user, Update update) throws ParseException {
-        if (!update.hasMessage()) {
-            return errorMessageDefault(update);
-        }
-        val message = update.getMessage().getText();
-        Long inn = 0L;
-        try {
-            inn = Long.parseLong(message);
-        } catch (Exception ex) {
-            stateService.setState(user, WAIT_INN);
-            val errorText = "Ошибка. Некорректный ИНН: " + message
-                    + NEW_LINE + "ИНН может содержать только цифры.";
-            return answerAndReInn(user, errorText);
-        }
-        val innInfo = innInfoRepository.findById(inn).orElse(null);
-        if (innInfo == null) {
-            stateService.setState(user, WAIT_INN);
-            val errorText = "По указанному ИНН записей не найдено: " + inn;
-            return answerAndReInn(user, errorText);
-        }
+    protected Statistic createStatistic(User user) {
         val statistic = new Statistic();
         statistic.setUser(user);
-        statistic.setInn(inn);
         statistic.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
-        statisticRepository.save(statistic);
+        return statistic;
+    }
 
+    protected List<PartialBotApiMethod> createInnInfoMessaages(User user, List<InnInfo> innInfoList) throws ParseException {
         val answer = new ArrayList<PartialBotApiMethod>();
-        answer.add(SendMessageWrap.init()
-                .setChatIdLong(user.getChatId())
-                .setText("Запись в БД найдена:" + NEW_LINE + getInnInfoString(innInfo))
-                .build().createSendMessage());
-
-        stateService.setState(user, WAIT_INN);
-        answer.add(getInputMessageInn(user));
-
+        for (InnInfo innInfo : innInfoList) {
+            answer.add(SendMessageWrap.init()
+                    .setChatIdLong(user.getChatId())
+                    .setText(getInnInfoString(innInfo))
+                    .build().createSendMessage());
+        }
         return answer;
     }
 
-    private List<PartialBotApiMethod> answerAndReInn(User user, String messageError) {
-        return List.of(SendMessageWrap.init()
-                        .setChatIdLong(user.getChatId())
-                        .setText(messageError)
-                        .build().createSendMessage()
-                , getInputMessageInn(user));
-    }
-
-    private SendMessage getInputMessageInn(User user) {
-        return SendMessageWrap.init()
-                .setChatIdLong(user.getChatId())
-                .setText("Введите ИНН:")
-                .build().createSendMessage();
-    }
-
-    private String getPrepareParameter(String brief, String value) {
-        val prepareParametr = new StringBuilder();
-        prepareParametr
-                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(prepareShield(value));
-//                .append(NEW_LINE).append("--->").append(brief).append(value);
-        return prepareParametr.toString();
-    }
-
-    private String getPrepareParameterWithoutShield(String brief, String value) {
-        val prepareParametr = new StringBuilder();
-        prepareParametr
-                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(value);
-//        prepareParametr
-//                .append(NEW_LINE).append("--->").append(brief).append(value);
-        return prepareParametr.toString();
-    }
-
-
-    private String getPrepareParameter(String brief, Long value) {
-        val prepareParametr = new StringBuilder();
-        prepareParametr
-                .append(NEW_LINE).append(STAR).append(brief).append(STAR).append(prepareShield(String.valueOf(value)));
-//                .append(NEW_LINE).append("--->").append(brief).append(value);
-        return prepareParametr.toString();
-    }
-
-    private String getInnInfoString(InnInfo innInfo) throws ParseException {
+    protected String getInnInfoString(InnInfo innInfo) throws ParseException {
         val innInfoString = new StringBuilder();
         innInfoString
                 .append(getPrepareParameter("Номер: ", innInfo.getNumber_col()))
@@ -160,4 +93,15 @@ public abstract class MenuSearchByInnBase extends Menu {
         ;
         return innInfoString.toString();
     }
+
+    private String getPrepareParameter(String brief, String value) {
+        val prepareParametr = new StringBuilder();
+        prepareParametr.append(NEW_LINE).append(STAR).append(brief).append(STAR).append(prepareShield(value));
+        return prepareParametr.toString();
+    }
+
+    private String getPrepareParameter(String brief, Long value) {
+        return getPrepareParameter(brief, String.valueOf(value));
+    }
+
 }
