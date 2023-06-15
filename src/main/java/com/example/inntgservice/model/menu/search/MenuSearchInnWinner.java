@@ -15,10 +15,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.example.inntgservice.constant.Constant.*;
 import static com.example.inntgservice.constant.Constant.Command.*;
-import static com.example.inntgservice.constant.Constant.NEW_LINE;
 import static com.example.inntgservice.enums.State.*;
 
 @Component
@@ -66,7 +67,26 @@ public class MenuSearchInnWinner extends MenuSearchBase {
         if (!update.hasMessage()) {
             return errorMessageDefault(update);
         }
-        val message = update.getMessage().getText();
+        val answer = new ArrayList<PartialBotApiMethod>();
+        val message = update.getMessage().getText().replaceAll(SPACE, EMPTY);
+        val innsSplitComma = Arrays.asList(message.split(","));
+        val innList = splitList(innsSplitComma, NEW_LINE);
+        for (String inn : innList) {
+            answer.addAll(findInnWinner(user, inn));
+        }
+        answer.addAll(createSendMessage(user, INPUT_TEXT));
+        return answer;
+    }
+
+    private List<String> splitList(List<String> list, String regex) {
+        val result = new ArrayList<String>();
+        for (String value : list) {
+            result.addAll(Arrays.asList(value.split(regex)));
+        }
+        return result;
+    }
+
+    private List<PartialBotApiMethod> findInnWinner(User user, String message) throws ParseException {
         Long innWinner = 0L;
         val answer = new ArrayList<PartialBotApiMethod>();
         try {
@@ -75,7 +95,6 @@ public class MenuSearchInnWinner extends MenuSearchBase {
             val errorText = "Ошибка. Некорректный ИНН: " + message
                     + NEW_LINE + "ИНН может содержать только цифры.";
             answer.addAll(createSendMessage(user, errorText));
-            answer.addAll(createSendMessage(user, INPUT_TEXT));
             return answer;
         }
         val innInfo = innInfoRepository.findById(innWinner).orElse(null);
@@ -88,7 +107,6 @@ public class MenuSearchInnWinner extends MenuSearchBase {
             statisticRepository.save(statistic);
             answer.addAll(createInnInfoMessaages(user, List.of(innInfo)));
         }
-        answer.addAll(createSendMessage(user, INPUT_TEXT));
         return answer;
     }
 
