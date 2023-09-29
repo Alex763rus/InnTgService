@@ -23,11 +23,10 @@ import static com.example.inntgservice.enums.State.FREE;
 import static com.example.inntgservice.enums.State.WAIT_MAIL;
 import static org.example.tgcommons.constant.Constant.TextConstants.EMPTY;
 
-@Component
+@Component(SEARCH_BY_MAIL)
 @Slf4j
 public class MenuSearchByMail extends MenuSearchBase {
 
-    private static final String MENU_COMMAND = SEARCH_BY_MAIL;
     private static final String INPUT_TEXT = "Введите почту:";
     private static final String DESCRIPTION = "Поиск по почте";
     private static final State WAIT_STATE = WAIT_MAIL;
@@ -35,7 +34,7 @@ public class MenuSearchByMail extends MenuSearchBase {
 
     @Override
     public String getMenuComand() {
-        return MENU_COMMAND;
+        return SEARCH_BY_MAIL;
     }
 
     @Override

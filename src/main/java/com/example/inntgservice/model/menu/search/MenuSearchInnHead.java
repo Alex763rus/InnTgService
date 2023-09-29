@@ -13,15 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.inntgservice.constant.Constant.Command.SEARCH_BY_INN_HEAD;
+import static com.example.inntgservice.constant.Constant.Command.SEARCH_BY_WEBSITE;
 import static com.example.inntgservice.enums.State.FREE;
 import static com.example.inntgservice.enums.State.WAIT_INN_HEAD;
 import static org.example.tgcommons.constant.Constant.TextConstants.NEW_LINE;
 
-@Component
+@Component(SEARCH_BY_INN_HEAD)
 @Slf4j
 public class MenuSearchInnHead extends MenuSearchBase {
-
-    private static final String MENU_COMMAND = SEARCH_BY_INN_HEAD;
 
     private static final String INPUT_TEXT = "Введите ИНН руководителя:";
     private static final String DESCRIPTION = "Поиск по ИНН руководителя";
@@ -30,7 +29,7 @@ public class MenuSearchInnHead extends MenuSearchBase {
 
     @Override
     public String getMenuComand() {
-        return MENU_COMMAND;
+        return SEARCH_BY_INN_HEAD;
     }
 
     @Override

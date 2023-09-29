@@ -18,11 +18,9 @@ import static com.example.inntgservice.enums.State.FREE;
 import static com.example.inntgservice.enums.State.WAIT_INN;
 import static org.example.tgcommons.constant.Constant.TextConstants.*;
 
-@Component
+@Component(SEARCH_BY_INN)
 @Slf4j
 public class MenuSearchInnWinner extends MenuSearchBase {
-    private static final String MENU_COMMAND = SEARCH_BY_INN;
-
     private static final String INPUT_TEXT = "Введите ИНН:";
     private static final String DESCRIPTION = "Поиск по ИНН";
 
@@ -30,7 +28,7 @@ public class MenuSearchInnWinner extends MenuSearchBase {
 
     @Override
     public String getMenuComand() {
-        return MENU_COMMAND;
+        return SEARCH_BY_INN;
     }
 
     @Override

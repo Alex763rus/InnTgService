@@ -11,9 +11,10 @@ import java.util.List;
 
 import static com.example.inntgservice.constant.Constant.Command.*;
 import static com.example.inntgservice.utils.StringUtils.prepareShield;
+import static org.example.tgcommons.constant.Constant.Command.COMMAND_START;
 import static org.example.tgcommons.constant.Constant.TextConstants.NEW_LINE;
 
-@Component
+@Component(COMMAND_START)
 @Slf4j
 public class MenuStart extends Menu {
 
@@ -67,6 +68,6 @@ public class MenuStart extends Menu {
 
     @Override
     public String getDescription() {
-        return " Начало работы";
+        return "Начало работы";
     }
 }

@@ -18,11 +18,10 @@ import static com.example.inntgservice.enums.State.WAIT_PHONE;
 import static org.example.tgcommons.constant.Constant.TextConstants.EMPTY;
 import static org.example.tgcommons.constant.Constant.TextConstants.NEW_LINE;
 
-@Component
+@Component(SEARCH_BY_PHONE)
 @Slf4j
 public class MenuSearchByPhone extends MenuSearchBase {
 
-    private static final String MENU_COMMAND = SEARCH_BY_PHONE;
     private static final String INPUT_TEXT = "Введите телефон:";
     private static final String DESCRIPTION = "Поиск по телефону";
 
@@ -30,7 +29,7 @@ public class MenuSearchByPhone extends MenuSearchBase {
 
     @Override
     public String getMenuComand() {
-        return MENU_COMMAND;
+        return SEARCH_BY_PHONE;
     }
 
     @Override

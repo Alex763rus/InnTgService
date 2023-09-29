@@ -11,9 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.example.inntgservice.constant.Constant.Command.COMMAND_DEFAULT;
+import static com.example.inntgservice.constant.Constant.Command.CREATE_STATISTIC;
 import static com.example.inntgservice.utils.StringUtils.prepareShield;
 
-@Component
+@Component(COMMAND_DEFAULT)
 @Slf4j
 public class MenuDefault extends Menu {
 

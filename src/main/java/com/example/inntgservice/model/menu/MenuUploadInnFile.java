@@ -17,8 +17,9 @@ import java.util.List;
 import static com.example.inntgservice.constant.Constant.Command.UPLOAD_INN_FILE;
 import static com.example.inntgservice.enums.FileType.USER_IN;
 import static com.example.inntgservice.enums.State.*;
+import static org.example.tgcommons.constant.Constant.Command.COMMAND_START;
 
-@Component
+@Component(UPLOAD_INN_FILE)
 @Slf4j
 public class MenuUploadInnFile extends Menu {
 
@@ -27,13 +28,11 @@ public class MenuUploadInnFile extends Menu {
 
     @Override
     public List<PartialBotApiMethod> menuRun(User user, Update update) {
-        switch (stateService.getState(user)) {
-            case FREE:
-                return freeLogic(user, update);
-            case WAIT_UPLOAD_FILE:
-                return convertFileLogic(user, update);
-        }
-        return createErrorDefaultMessage(user);
+        return switch (stateService.getState(user)) {
+            case FREE -> freeLogic(user, update);
+            case WAIT_UPLOAD_FILE -> convertFileLogic(user, update);
+            default -> createErrorDefaultMessage(user);
+        };
     }
 
     @Override

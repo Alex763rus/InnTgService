@@ -1,11 +1,9 @@
 package com.example.inntgservice.model.menu;
 
-import com.example.inntgservice.model.jpa.StatisticRepository;
 import com.example.inntgservice.model.jpa.User;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.example.tgcommons.model.wrapper.SendDocumentWrap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,12 +15,9 @@ import static com.example.inntgservice.constant.Constant.Command.CREATE_STATISTI
 import static com.example.inntgservice.utils.StringUtils.prepareLong;
 import static com.example.inntgservice.utils.StringUtils.prepareShield;
 
-@Component
+@Component(CREATE_STATISTIC)
 @Slf4j
 public class MenuCreateStatistic extends Menu {
-
-    @Autowired
-    private StatisticRepository statisticRepository;
 
     @Override
     public String getMenuComand() {

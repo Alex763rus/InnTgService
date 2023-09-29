@@ -18,20 +18,17 @@ import static com.example.inntgservice.enums.State.WAIT_WEBSITE;
 import static org.example.tgcommons.constant.Constant.TextConstants.EMPTY;
 import static org.example.tgcommons.constant.Constant.TextConstants.NEW_LINE;
 
-@Component
+@Component(SEARCH_BY_WEBSITE)
 @Slf4j
 public class MenuSearchByWebsite extends MenuSearchBase {
 
-    private static final String MENU_COMMAND = SEARCH_BY_WEBSITE;
-
     private static final String INPUT_TEXT = "Введите сайт:";
     private static final String DESCRIPTION = "Поиск по телефону";
-
     private static final State WAIT_STATE = WAIT_WEBSITE;
 
     @Override
     public String getMenuComand() {
-        return MENU_COMMAND;
+        return SEARCH_BY_WEBSITE;
     }
 
     @Override
