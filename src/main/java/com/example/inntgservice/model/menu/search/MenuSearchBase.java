@@ -4,7 +4,7 @@ import com.example.inntgservice.model.jpa.InnInfo;
 import com.example.inntgservice.model.jpa.Statistic;
 import com.example.inntgservice.model.jpa.User;
 import com.example.inntgservice.model.menu.Menu;
-import com.example.inntgservice.model.wpapper.SendMessageWrap;
+import org.example.tgcommons.model.wrapper.SendMessageWrap;
 import jakarta.persistence.MappedSuperclass;
 import lombok.val;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -14,22 +14,15 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.inntgservice.constant.Constant.NEW_LINE;
-import static com.example.inntgservice.constant.Constant.STAR;
 import static com.example.inntgservice.utils.DateConverter.TEMPLATE_DATE_DOT;
 import static com.example.inntgservice.utils.DateConverter.convertDateFormat;
 import static com.example.inntgservice.utils.StringUtils.convertDoubleFormat;
 import static com.example.inntgservice.utils.StringUtils.prepareShield;
+import static org.example.tgcommons.constant.Constant.TextConstants.NEW_LINE;
+import static org.example.tgcommons.constant.Constant.TextConstants.STAR;
 
 @MappedSuperclass
 public abstract class MenuSearchBase extends Menu {
-
-    protected List<PartialBotApiMethod> createSendMessage(User user, String message) {
-        return List.of(SendMessageWrap.init()
-                .setChatIdLong(user.getChatId())
-                .setText(message)
-                .build().createSendMessage());
-    }
 
     protected Statistic createStatistic(User user) {
         val statistic = new Statistic();
@@ -41,10 +34,7 @@ public abstract class MenuSearchBase extends Menu {
     protected List<PartialBotApiMethod> createInnInfoMessaages(User user, List<InnInfo> innInfoList) throws ParseException {
         val answer = new ArrayList<PartialBotApiMethod>();
         for (InnInfo innInfo : innInfoList) {
-            answer.add(SendMessageWrap.init()
-                    .setChatIdLong(user.getChatId())
-                    .setText(getInnInfoString(innInfo))
-                    .build().createSendMessage());
+            answer.add(createMessage(user, getInnInfoString(innInfo)));
         }
         return answer;
     }

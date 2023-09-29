@@ -1,7 +1,7 @@
 package com.example.inntgservice.model.menu;
 
 import com.example.inntgservice.model.jpa.User;
-import com.example.inntgservice.model.wpapper.SendMessageWrap;
+import org.example.tgcommons.model.wrapper.SendMessageWrap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -24,11 +24,7 @@ public class MenuDefault extends Menu {
 
     @Override
     public List<PartialBotApiMethod> menuRun(User user, Update update) {
-        return Arrays.asList(
-                SendMessageWrap.init()
-                        .setChatIdLong(update.getMessage().getChatId())
-                        .setText("Не найдена доступная команда с именем: " + prepareShield(update.getMessage().getText()))
-                        .build().createSendMessage());
+        return createMessageList(user, "Не найдена доступная команда с именем: " + prepareShield(update.getMessage().getText()));
     }
 
     @Override

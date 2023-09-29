@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import static com.example.inntgservice.constant.Constant.PARSE_MODE;
+import static org.example.tgcommons.constant.Constant.Telegramm.PARSE_MODE;
 
 @Service
 @Slf4j

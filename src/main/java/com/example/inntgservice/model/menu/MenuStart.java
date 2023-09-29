@@ -1,8 +1,6 @@
 package com.example.inntgservice.model.menu;
 
 import com.example.inntgservice.model.jpa.User;
-import com.example.inntgservice.model.menu.search.MenuSearchBase;
-import com.example.inntgservice.model.wpapper.SendMessageWrap;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -12,8 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 
 import static com.example.inntgservice.constant.Constant.Command.*;
-import static com.example.inntgservice.constant.Constant.NEW_LINE;
 import static com.example.inntgservice.utils.StringUtils.prepareShield;
+import static org.example.tgcommons.constant.Constant.TextConstants.NEW_LINE;
 
 @Component
 @Slf4j
@@ -27,15 +25,14 @@ public class MenuStart extends Menu {
     @Override
     public List<PartialBotApiMethod> menuRun(User user, Update update) {
         try {
-            switch (stateService.getState(user)) {
-                case FREE:
-                    return freeLogic(user, update);
-            }
+            return switch (stateService.getState(user)) {
+                case FREE -> freeLogic(user, update);
+                default -> createErrorDefaultMessage(user);
+            };
         } catch (Exception ex) {
             log.error(ex.getMessage());
-            return errorMessage(update, ex.getMessage());
+            return createMessageList(user, ex.toString());
         }
-        return errorMessageDefault(update);
     }
 
     private List<PartialBotApiMethod> freeLogic(User user, Update update) {
@@ -65,10 +62,7 @@ public class MenuStart extends Menu {
                 ;
                 break;
         }
-        return List.of(SendMessageWrap.init()
-                .setChatIdLong(update.getMessage().getChatId())
-                .setText(messageText.toString())
-                .build().createSendMessage());
+        return createMessageList(user, messageText.toString());
     }
 
     @Override

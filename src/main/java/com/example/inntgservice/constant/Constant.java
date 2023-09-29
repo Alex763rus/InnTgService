@@ -9,6 +9,8 @@ public final class Constant {
     @NoArgsConstructor(access = PRIVATE)
     public final class App {
 
+        public static String APP_NAME = "InnTgService";
+
     }
 
     @NoArgsConstructor(access = PRIVATE)
@@ -23,7 +25,6 @@ public final class Constant {
         public static final String SEARCH_BY_MAIL = "/search_by_mail";
         public static final String SEARCH_BY_WEBSITE = "/search_by_website";
         public static final String SEARCH_BY_INN = "/search_by_inn";
-
     }
 
     @NoArgsConstructor(access = PRIVATE)
@@ -31,18 +32,5 @@ public final class Constant {
         public static final String ADMIN_BLOCK_APP = "block";
         public static final String ADMIN_UNBLOCK_APP = "unblock";
     }
-
-    public static String APP_NAME = "InnTgService";
-    public static String PARSE_MODE = "Markdown";
-
-    public static final String SHIELD = "\\";
-
-    public static final String STAR = "*";
-
-    public static String NEW_LINE = "\n";
-    public static String SPACE = " ";
-    public static String EMPTY = "";
-    public static String SHEET_RESULT_NAME = "ИМПОРТ";
-
 
 }

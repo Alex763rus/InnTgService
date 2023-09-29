@@ -1,7 +1,7 @@
 package com.example.inntgservice.model.menu;
 
 import com.example.inntgservice.model.jpa.User;
-import com.example.inntgservice.model.wpapper.SendMessageWrap;
+import org.example.tgcommons.model.wrapper.SendMessageWrap;
 import com.example.inntgservice.service.excel.InnUploaderService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -33,7 +33,7 @@ public class MenuUploadInnFile extends Menu {
             case WAIT_UPLOAD_FILE:
                 return convertFileLogic(user, update);
         }
-        return errorMessageDefault(update);
+        return createErrorDefaultMessage(user);
     }
 
     @Override
@@ -55,32 +55,26 @@ public class MenuUploadInnFile extends Menu {
                     val book = fileUploadService.uploadXlsx(fileFullPath, field.getFileId());
                     innUploaderService.uploadBookToDb(book);
                     stateService.refreshUser(user);
-                    return Arrays.asList(SendMessageWrap.init()
-                            .setChatIdLong(user.getChatId())
-                            .setText("Успешная загрузка")
-                            .build().createSendMessage());
+                    return createMessageList(user, "Успешная загрузка");
                 } catch (Exception ex) {
                     log.error(ex.getMessage());
-                    return errorMessage(update, ex.getMessage());
+                    return createMessageList(user, ex.getMessage());
                 }
             } else {
-                return errorMessage(update, "Ошибка. Сообщение не содержит документ.\nОтправьте документ");
+                return createMessageList(user, "Ошибка. Сообщение не содержит документ.\nОтправьте документ");
             }
         }
-        return errorMessageDefault(update);
+        return createErrorDefaultMessage(user);
     }
 
     private List<PartialBotApiMethod> freeLogic(User user, Update update) {
         stateService.setState(user, WAIT_UPLOAD_FILE);
-        return Arrays.asList(SendMessageWrap.init()
-                .setChatIdLong(user.getChatId())
-                .setText("Отправьте исходный файл")
-                .build().createSendMessage());
+        return createMessageList(user, "Отправьте исходный файл");
     }
 
     private List<PartialBotApiMethod> uploadFileWithoutTg(User user, Update update) {
         if (!update.getMessage().getText().equals(getMenuComand())) {
-            return errorMessageDefault(update);
+            return createErrorDefaultMessage(user);
         }
         XSSFWorkbook book = null;
         try {
@@ -89,10 +83,7 @@ public class MenuUploadInnFile extends Menu {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return Arrays.asList(SendMessageWrap.init()
-                .setChatIdLong(user.getChatId())
-                .setText("Успешно загружено!")
-                .build().createSendMessage());
+        return createMessageList(user, "Успешно загружено!");
     }
 
 }

@@ -1,13 +1,10 @@
 package com.example.inntgservice.model.menu;
 
-import com.example.inntgservice.enums.State;
-import com.example.inntgservice.model.jpa.Statistic;
 import com.example.inntgservice.model.jpa.StatisticRepository;
 import com.example.inntgservice.model.jpa.User;
-import com.example.inntgservice.model.wpapper.SendDocumentWrap;
-import com.example.inntgservice.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.example.tgcommons.model.wrapper.SendDocumentWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -42,7 +39,7 @@ public class MenuCreateStatistic extends Menu {
         val excelData = new ArrayList<List<String>>();
         val allStatistic = statisticRepository.findAll();
         if (allStatistic.size() == 0) {
-            return errorMessage(update, "Статистика отсутствует");
+            return createMessageList(user, "Статистика отсутствует");
         }
         excelData.add(List.of("ID:", "Дата:", "Пользователь:", "Логин:", "ИНН:", "ИНН Руководителя", "Почта", "Телефон", "Сайт"));
         for (val statistic : allStatistic) {

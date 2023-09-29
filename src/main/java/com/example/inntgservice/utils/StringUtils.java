@@ -6,8 +6,8 @@ import lombok.val;
 
 import java.text.DecimalFormat;
 
-import static com.example.inntgservice.constant.Constant.SHIELD;
-import static com.example.inntgservice.constant.Constant.EMPTY;
+import static org.example.tgcommons.constant.Constant.TextConstants.SHIELD;
+import static org.example.tgcommons.constant.Constant.TextConstants.EMPTY;
 
 @Getter
 @SuperBuilder(setterPrefix = "set", builderMethodName = "init", toBuilder = true)
@@ -30,10 +30,10 @@ public class StringUtils {
         return source;
     }
 
-    private final static Double ZERO = 0.0;
-    private final static Double ONE_MILLIARD = 1000000000.0;
-    private final static Double ONE_MILLION = 1000000.0;
-    private final static Double ONE_THOUSAND = 1000.0;
+    private static final Double ZERO = 0.0;
+    private static final Double ONE_MILLIARD = 1000000000.0;
+    private static final Double ONE_MILLION = 1000000.0;
+    private static final Double ONE_THOUSAND = 1000.0;
 
     public static String convertDoubleFormat(Double value) {
         Double absValue = value.compareTo(ZERO) == 1 ? value : -value;

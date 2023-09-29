@@ -1,11 +1,11 @@
 package com.example.inntgservice.service;
 
 import com.example.inntgservice.config.BotConfig;
-import com.example.inntgservice.model.wpapper.SendMessageWrap;
 import com.example.inntgservice.service.menu.MenuService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.example.tgcommons.model.wrapper.SendMessageWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -17,11 +17,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.inntgservice.constant.Constant.NEW_LINE;
+import static org.example.tgcommons.constant.Constant.TextConstants.NEW_LINE;
 
 @Component
 @Slf4j
@@ -92,7 +91,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         int finish = step;
         for (; start < text.length(); ) {
             finish = text.lastIndexOf(NEW_LINE, start + MESSAGE_LEN_LIMIT);
-            if(start == finish){
+            if (start == finish) {
                 finish = start + MESSAGE_LEN_LIMIT;
             }
             tokens.add(text.substring(start, Math.min(text.length(), finish)));
@@ -102,7 +101,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             splitAnswerOnToLongTextList.add(SendMessageWrap.init()
                     .setChatIdString(answer.getChatId())
                     .setText(token)
-                    .build().createSendMessage()
+                    .build().createMessage()
             );
         }
         return splitAnswerOnToLongTextList;
