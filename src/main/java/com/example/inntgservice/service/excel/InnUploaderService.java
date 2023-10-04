@@ -1,6 +1,5 @@
 package com.example.inntgservice.service.excel;
 
-import com.example.inntgservice.exception.UploadProcessingException;
 import com.example.inntgservice.model.jpa.InnInfo;
 import com.example.inntgservice.model.jpa.InnInfoRepository;
 import lombok.extern.slf4j.Slf4j;

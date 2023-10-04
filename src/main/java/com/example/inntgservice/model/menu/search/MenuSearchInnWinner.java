@@ -1,6 +1,8 @@
 package com.example.inntgservice.model.menu.search;
 
 import com.example.inntgservice.enums.State;
+import com.example.inntgservice.model.jpa.InnCrosslink;
+import com.example.inntgservice.model.jpa.InnCrosslinkKey;
 import com.example.inntgservice.model.jpa.User;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -95,13 +97,36 @@ public class MenuSearchInnWinner extends MenuSearchBase {
         if (innInfo == null) {
             val errorText = "По введенным данным записей в БД не найдено: " + message;
             answer.addAll(createMessageList(user, errorText));
-        } else {
-            val statistic = createStatistic(user);
-            statistic.setInn(innWinner);
-            statisticRepository.save(statistic);
-            answer.addAll(createInnInfoMessaages(user, List.of(innInfo)));
+            return answer;
         }
+        val statistic = createStatistic(user);
+        statistic.setInn(innWinner);
+        statisticRepository.save(statistic);
+        answer.addAll(createInnInfoMessaages(user, List.of(innInfo)));
+        val innCrossLinkKeysFirst = innCrossLinkRepository.findByInnCrosslinkKeyInnFirst(innWinner);
+        answer.add(getInnLinked(user, innCrossLinkKeysFirst, "Найдены прямые связи, ИНН:"));
+
+        val innCrossLinkKeysSecond = innCrossLinkRepository.findByInnCrosslinkKeyInnSecond(innWinner);
+        answer.add(getInnLinked(user, innCrossLinkKeysSecond, "Найдены обратные связи, ИНН:"));
         return answer;
     }
+
+    private PartialBotApiMethod getInnLinked(User user, List<InnCrosslink> innCrossLinks, String title) {
+        if (innCrossLinks.isEmpty()) {
+            return null;
+        }
+        val innLinkedMessage = new StringBuilder();
+        innLinkedMessage.append(title).append(NEW_LINE);
+        innCrossLinks.stream().forEach(
+                link -> innLinkedMessage.append(
+                        String.format("- %s: %d - %d%s"
+                                , link.getCrossLinkType().getTitle()
+                                , link.getInnCrosslinkKey().getInnFirst()
+                                , link.getInnCrosslinkKey().getInnSecond()
+                                , NEW_LINE))
+        );
+        return createMessage(user, innLinkedMessage.toString());
+    }
+
 
 }

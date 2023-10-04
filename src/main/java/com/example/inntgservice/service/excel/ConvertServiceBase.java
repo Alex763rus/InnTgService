@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.inntgservice.utils.DateConverter.convertDateFormat;
+import static org.example.tgcommons.constant.Constant.TextConstants.EMPTY;
 
 
 @Component
@@ -70,7 +71,7 @@ public class ConvertServiceBase {
 
     protected int getLastRow(int startRow) {
         for (int i = startRow; ; i++) {
-            if (getCellValue(i, 14).equals("")) {
+            if (getCellValue(i, 14).equals(EMPTY)) {
                 return i - 1;
             }
         }

@@ -60,6 +60,7 @@ public class MenuStart extends Menu {
                         .append("Меню администратора:").append(NEW_LINE)
                         .append("- загрузить файл: ").append(prepareShield(UPLOAD_INN_FILE)).append(NEW_LINE)
                         .append("- сформировать статистику: ").append(prepareShield(CREATE_STATISTIC)).append(NEW_LINE)
+                        .append("- загрузить связи: ").append(prepareShield(UPLOAD_LINK_FILE)).append(NEW_LINE)
                 ;
                 break;
         }

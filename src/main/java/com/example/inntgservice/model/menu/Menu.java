@@ -1,31 +1,30 @@
 package com.example.inntgservice.model.menu;
 
 import com.example.inntgservice.config.BotConfig;
+import com.example.inntgservice.model.jpa.InnCrossLinkRepository;
 import com.example.inntgservice.model.jpa.InnInfoRepository;
 import com.example.inntgservice.model.jpa.StatisticRepository;
 import com.example.inntgservice.model.jpa.User;
+import com.example.inntgservice.service.database.UserService;
+import com.example.inntgservice.service.excel.ExcelGenerateService;
+import com.example.inntgservice.service.excel.ExcelService;
+import com.example.inntgservice.service.excel.FileUploadService;
+import com.example.inntgservice.service.menu.ButtonService;
+import com.example.inntgservice.service.menu.StateService;
+import jakarta.persistence.MappedSuperclass;
 import lombok.val;
 import org.example.tgcommons.exception.InputCallbackException;
 import org.example.tgcommons.model.button.ButtonsDescription;
 import org.example.tgcommons.model.wrapper.DeleteMessageWrap;
 import org.example.tgcommons.model.wrapper.SendMessageWrap;
-import com.example.inntgservice.service.database.UserService;
-import com.example.inntgservice.service.excel.ExcelService;
-import com.example.inntgservice.service.excel.FileUploadService;
-import com.example.inntgservice.service.excel.ExcelGenerateService;
-import com.example.inntgservice.service.menu.ButtonService;
-import com.example.inntgservice.service.menu.StateService;
-import jakarta.persistence.MappedSuperclass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.example.tgcommons.constant.Constant.MessageConstants.DEFAULT_TEXT_ERROR;
-import static org.example.tgcommons.constant.Constant.TextConstants.EMPTY;
 import static org.example.tgcommons.utils.ButtonUtils.createVerticalColumnMenu;
 
 @MappedSuperclass
@@ -56,14 +55,10 @@ public abstract class Menu implements MenuActivity {
     protected InnInfoRepository innInfoRepository;
 
     @Autowired
-    protected StatisticRepository statisticRepository;
+    protected InnCrossLinkRepository innCrossLinkRepository;
 
-//    protected List<PartialBotApiMethod> errorMessageDefault(Update update) {
-//        return SendMessageWrap.init()
-//                .setChatIdLong(update.getMessage().getChatId())
-//                .setText(DEFAULT_TEXT_ERROR)
-//                .build().createMessageList();
-//    }
+    @Autowired
+    protected StatisticRepository statisticRepository;
 
     protected String getInputCallback(Update update) {
         if (!update.hasCallbackQuery()) {
